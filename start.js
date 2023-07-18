@@ -1,3 +1,3 @@
 const main = require('./index');
 
-main();
+main('./README.md');

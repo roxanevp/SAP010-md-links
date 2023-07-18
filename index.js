@@ -1,26 +1,25 @@
 #!/usr/bin/env node
 const fs = require('fs');
 
-module.exports = () => {
-  // eslint-disable-next-line no-console
-  console.log('from require');
+const mdLinks = (path, options) => {
+  const pathExists = fs.existsSync(path);
+  console.log(pathExists);
+  if (pathExists) {
+    fs.readFile(path, 'utf8', (err, data) => {
+      if (err) {
+        // eslint-disable-next-line no-console
+        console.error(err);
+        return;
+      }
+      const searchLinks = /(\[.*\]\(http.*\))/gm;
+      // eslint-disable-next-line no-console
+       console.log(data.match(searchLinks));
+    });
+  }
 };
 
+module.exports = mdLinks;
+
 if (require.main === module) {
-  // eslint-disable-next-line no-console
-  console.log('from cli');
-}
-
-fs.readFile('./README.md', 'utf8', (err, data) => {
-  if (err) {
-    // eslint-disable-next-line no-console
-    console.error(err);
-    return;
-  }
-  // eslint-disable-next-line no-console
-  console.log(data);
-
-  const searchLinks = /(\[.*\]\(http.*\))/gm;
-  // eslint-disable-next-line no-console
-  console.log(data.match(searchLinks));
-});
+  mdLinks();
+};
