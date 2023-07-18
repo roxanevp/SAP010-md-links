@@ -1,10 +1,13 @@
-const mdLinks = require('../');
-
+const mdLinks = require('..');
 
 describe('mdLinks', () => {
+  describe('deveria chamar a função mdLinks', () => {
+    test('passou o path como parametro', () => {
+      mdLinks('./readme.md');
+    });
 
-  it('should...', () => {
-    console.log('FIX ME!');
+    test('não passou o path como parametro', () => {
+      mdLinks();
+    });
   });
-
 });

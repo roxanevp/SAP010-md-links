@@ -1,22 +1,26 @@
 #!/usr/bin/env node
+const fs = require('fs');
 
 module.exports = () => {
-  console.log('bbbb')
+  // eslint-disable-next-line no-console
+  console.log('from require');
 };
 
-if (require.main === module ) {
-
+if (require.main === module) {
+  // eslint-disable-next-line no-console
+  console.log('from cli');
 }
-console.log('aaaa')
 
-const fs = require('fs')
-fs.readFile('./README.md' , 'utf8' ,  (err, data) => {
+fs.readFile('./README.md', 'utf8', (err, data) => {
   if (err) {
-    console.error(err)
-    return
+    // eslint-disable-next-line no-console
+    console.error(err);
+    return;
   }
-  console.log(data)
+  // eslint-disable-next-line no-console
+  console.log(data);
 
-let searchLinks = /(\[.*\]\(http.*\))/gm;
-console.log(data.match(searchLinks));
-})
+  const searchLinks = /(\[.*\]\(http.*\))/gm;
+  // eslint-disable-next-line no-console
+  console.log(data.match(searchLinks));
+});

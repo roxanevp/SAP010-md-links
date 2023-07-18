@@ -1,3 +1,3 @@
-const main = require("./index");
+const main = require('./index');
 
-main()
+main();
