@@ -16,4 +16,7 @@ fs.readFile('./README.md' , 'utf8' ,  (err, data) => {
     return
   }
   console.log(data)
+
+let searchLinks = /(\[.*\]\(http.*\))/gm;
+console.log(data.match(searchLinks));
 })
