@@ -9,7 +9,11 @@ const mdLinks = (path, options) => new Promise((resolve, reject) => {
     const stats = fs.statSync(path);
     const isFolder = stats.isDirectory();
     if (isFolder) {
-      console.log('pasta');
+      const folderContent = fs.readdirSync(path, { withFileTypes: true })
+        .map((item) => ({ name: item.name, isFolder: item.isDirectory() }));
+      const files = folderContent.filter((item) => item.isFolder === false && item.name.endsWith('.md'));
+      const folders = folderContent.filter((item) => item.isFolder === true);
+      console.log('arquivos', files, '\npastas', folders);
     } else {
       fs.readFile(path, 'utf8', (err, data) => {
         if (err) {
