@@ -1,3 +1,3 @@
 const main = require('./index');
 
-main('./README.md').then(console.log);
+main('./exemplos').then(console.log);
