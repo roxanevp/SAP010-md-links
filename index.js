@@ -1,7 +1,8 @@
 #!/usr/bin/env node
+const { rejects } = require('assert');
 const fs = require('fs');
 
-const mdLinks = (path, options) => {
+const mdLinks = (path, options) => new Promise((resolve, reject) => {
   const pathExists = fs.existsSync(path);
   console.log(pathExists);
   if (pathExists) {
@@ -13,17 +14,17 @@ const mdLinks = (path, options) => {
       fs.readFile(path, 'utf8', (err, data) => {
         if (err) {
           // eslint-disable-next-line no-console
-          console.error(err);
+          reject(err);
           return;
         }
         const searchLinks = /(\[.*\]\(http.*\))/gm;
         // eslint-disable-next-line no-console
-        console.log(data.match(searchLinks));
+        resolve(data.match(searchLinks));
       });
     }
     console.log('is folder', isFolder);
   }
-};
+});
 
 module.exports = mdLinks;
 
