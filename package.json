@@ -13,7 +13,7 @@
     "md-links": "./index.js"
   },
   "scripts": {
-    "start": "nodemon start.js",
+    "start": "nodemon cli.js",
     "lint": "eslint ."
   },
   "dependencies": {
