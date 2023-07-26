@@ -1,9 +1,27 @@
 {
   "name": "md-links",
-  "version": "0.1.0",
   "engines": {
     "node": ">=16.x"
   },
+  "version": "1.0.0",
+  "description": "Quarto projeto da Laboratória: Biblioteca que lê e analisa arquivos no formato Markdown, para verificar os arquivos que contenham links e mostrar estatísticas",
+  "keywords": [
+    "javascript",
+    "node.js",
+    "markdown"
+  ],
+  "author": "Roxane Vaz Príncipe",
+  "license": "ISC",
+  "main": "index.js",
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roxanevp/SAP010-md-links.git"
+  },
+  "bugs": {
+    "url": "https://github.com/roxanevp/SAP010-md-links/issues"
+  },
+  "homepage": "https://github.com/roxanevp/SAP010-md-links#readme",
   "bootcamp": {
     "createdAt": "2023-06-19T12:25:44.680Z",
     "version": "6.3.0",
