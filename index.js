@@ -16,6 +16,16 @@ const validateLink = (link) => new Promise((resolve) => {
     .catch(checkStatus(resolve, link));
 });
 
+const getStats = (options, success) => (links) => {
+  if (options.stats) {
+    const total = links.length;
+    const unique = new Set(links.map(({ href }) => href)).size;
+    return success({ links, total, unique });
+  }
+
+  return success(links);
+};
+
 const readFileFolder = (path, success, fail, options) => {
   fs.readFile(path, 'utf8', (err, data) => {
     if (err) {
@@ -64,7 +74,7 @@ const readPath = (path, success, fail, options) => {
         readPath(`${path}/${folder.name}`, resolve, reject, options);
       })),
     // quando todas as promises resolvem, cria um array de links, ou dispara o erro
-    ]).then((values) => success([].concat(...values))).catch(fail);
+    ]).then((values) => ([].concat(...values))).then(getStats(options, success)).catch(fail);
   } else {
     readFileFolder(path, success, fail, options);
   }
