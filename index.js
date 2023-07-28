@@ -1,5 +1,20 @@
-#!/usr/bin/env node
 const fs = require('fs');
+const axios = require('axios');
+
+const checkStatus = (callback) => (param) => {
+  if (param.status >= 200 || param.status < 400) {
+    return callback({ status: param.status, ok: 'ok' });
+  }
+
+  const failedStatus = JSON.parse(JSON.stringify(param));
+  return callback({ status: failedStatus.status, ok: 'fail' });
+};
+
+const validateLink = (link) => new Promise((resolve, reject) => {
+  axios.get(link)
+    .then(checkStatus(resolve))
+    .catch(checkStatus(resolve));
+});
 
 const readFileFolder = (path, success, fail) => {
   fs.readFile(path, 'utf8', (err, data) => {
@@ -59,4 +74,5 @@ const mdLinks = (path, options) => new Promise((resolve, reject) => {
   }
 });
 
-module.exports = mdLinks;
+exports.validateLink = validateLink;
+// module.exports = mdLinks;
