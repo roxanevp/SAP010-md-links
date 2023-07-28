@@ -1,22 +1,22 @@
 const fs = require('fs');
 const axios = require('axios');
 
-const checkStatus = (callback) => (param) => {
+const checkStatus = (callback, link) => (param) => {
   if (param.status >= 200 || param.status < 400) {
-    return callback({ status: param.status, ok: 'ok' });
+    return callback({ ...link, status: param.status, ok: 'ok' });
   }
 
   const failedStatus = JSON.parse(JSON.stringify(param));
-  return callback({ status: failedStatus.status, ok: 'fail' });
+  return callback({ ...link, status: failedStatus.status, ok: 'fail' });
 };
 
-const validateLink = (link) => new Promise((resolve, reject) => {
-  axios.get(link)
-    .then(checkStatus(resolve))
-    .catch(checkStatus(resolve));
+const validateLink = (link) => new Promise((resolve) => {
+  axios.get(link.href)
+    .then(checkStatus(resolve, link))
+    .catch(checkStatus(resolve, link));
 });
 
-const readFileFolder = (path, success, fail) => {
+const readFileFolder = (path, success, fail, options) => {
   fs.readFile(path, 'utf8', (err, data) => {
     if (err) {
       fail(err);
@@ -33,12 +33,16 @@ const readFileFolder = (path, success, fail) => {
         file: path,
       };
     });
-
-    success(links);
+    const { validate } = options;
+    if (validate) {
+      Promise.all(links.map(validateLink)).then(success);
+    } else {
+      success(links);
+    }
   });
 };
 
-const readPath = (path, success, fail) => {
+const readPath = (path, success, fail, options) => {
   const stats = fs.statSync(path);
   const isFolder = stats.isDirectory();
 
@@ -52,27 +56,26 @@ const readPath = (path, success, fail) => {
     Promise.all([
       // trás todos os links dos arquivos da pasta atual
       ...files.map((file) => new Promise((resolve, reject) => {
-        readFileFolder(`${path}/${file.name}`, resolve, reject);
+        readFileFolder(`${path}/${file.name}`, resolve, reject, options);
       })),
       // chama a função readPath novamente para cada uma das pastas dentro da pasta
       // atual (função recursiva)
       ...folders.map((folder) => new Promise((resolve, reject) => {
-        readPath(`${path}/${folder.name}`, resolve, reject);
+        readPath(`${path}/${folder.name}`, resolve, reject, options);
       })),
     // quando todas as promises resolvem, cria um array de links, ou dispara o erro
     ]).then((values) => success([].concat(...values))).catch(fail);
   } else {
-    readFileFolder(path, success, fail);
+    readFileFolder(path, success, fail, options);
   }
 };
 
-const mdLinks = (path, options) => new Promise((resolve, reject) => {
+const mdLinks = (path, options = {}) => new Promise((resolve, reject) => {
   const pathExists = fs.existsSync(path);
 
   if (pathExists) {
-    readPath(path, resolve, reject);
+    readPath(path, resolve, reject, options);
   }
 });
 
-exports.validateLink = validateLink;
-// module.exports = mdLinks;
+module.exports = mdLinks;
