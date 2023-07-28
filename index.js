@@ -60,7 +60,3 @@ const mdLinks = (path, options) => new Promise((resolve, reject) => {
 });
 
 module.exports = mdLinks;
-
-if (require.main === module) {
-  mdLinks();
-}

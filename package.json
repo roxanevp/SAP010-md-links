@@ -28,7 +28,7 @@
     "commit": "c17498042fc79734cec390e6314cbe810e95bf4c"
   },
   "bin": {
-    "md-links": "./index.js"
+    "md-links": "./cli.js"
   },
   "scripts": {
     "start": "nodemon cli.js",
