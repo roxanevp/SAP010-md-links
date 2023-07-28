@@ -20,7 +20,13 @@ const getStats = (options, success) => (links) => {
   if (options.stats) {
     const total = links.length;
     const unique = new Set(links.map(({ href }) => href)).size;
-    return success({ links, total, unique });
+    
+    if(options.validate) {
+      const broken = links.filter((link) => link.ok === 'fail').length;
+      return success({ links, total, unique, broken });
+    } else {
+      return success({ links, total, unique });
+    }
   }
 
   return success(links);
@@ -74,18 +80,22 @@ const readPath = (path, success, fail, options) => {
         readPath(`${path}/${folder.name}`, resolve, reject, options);
       })),
     // quando todas as promises resolvem, cria um array de links, ou dispara o erro
-    ]).then((values) => ([].concat(...values))).then(getStats(options, success)).catch(fail);
+    ]).then((values) => success([].concat(...values))).catch(fail);
   } else {
     readFileFolder(path, success, fail, options);
   }
 };
 
-const mdLinks = (path, options = {}) => new Promise((resolve, reject) => {
+const readAllFilesAndFolders = (path, options) => new Promise((resolve, reject) => {
   const pathExists = fs.existsSync(path);
 
   if (pathExists) {
     readPath(path, resolve, reject, options);
   }
+})
+
+const mdLinks = (path, options = {}) => new Promise((resolve, reject) => {
+  readAllFilesAndFolders(path, options).then(getStats(options, resolve)).catch(reject);
 });
 
 module.exports = mdLinks;
