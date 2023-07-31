@@ -91,6 +91,8 @@ const readAllFilesAndFolders = (path, options) => new Promise((resolve, reject) 
 
   if (pathExists) {
     readPath(path, resolve, reject, options);
+  } else {
+    console.log('The path to the file does not exist or was used incorrectly');
   }
 })
 
