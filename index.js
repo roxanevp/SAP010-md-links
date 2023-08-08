@@ -16,21 +16,6 @@ const validateLink = (link) => new Promise((resolve) => {
     .catch(checkStatus(resolve, link));
 });
 
-const getStats = (options, success) => (links) => {
-  if (options.stats) {
-    const total = links.length;
-    const unique = new Set(links.map(({ href }) => href)).size;
-    
-    if(options.validate) {
-      const broken = links.filter((link) => link.ok === 'fail').length;
-      return success({ links, total, unique, broken });
-    } else {
-      return success({ links, total, unique });
-    }
-  }
-
-  return success(links);
-};
 
 const readFileFolder = (path, success, fail, options) => {
   fs.readFile(path, 'utf8', (err, data) => {
@@ -92,12 +77,14 @@ const readAllFilesAndFolders = (path, options) => new Promise((resolve, reject) 
   if (pathExists) {
     readPath(path, resolve, reject, options);
   } else {
-    console.log('The path to the file does not exist or was used incorrectly');
+    const message = 'The path to the file does not exist or was used incorrectly';
+    console.log(message);
+    reject(message);
   }
-})
+});
 
 const mdLinks = (path, options = {}) => new Promise((resolve, reject) => {
-  readAllFilesAndFolders(path, options).then(getStats(options, resolve)).catch(reject);
+  readAllFilesAndFolders(path, options).then(resolve).catch(reject);
 });
 
 module.exports = mdLinks;
