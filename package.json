@@ -32,7 +32,8 @@
   },
   "scripts": {
     "start": "nodemon cli.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "jest --coverage"
   },
   "dependencies": {
     "axios": "^1.4.0",
